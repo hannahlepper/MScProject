@@ -32,18 +32,9 @@ parametercombinations <- function(params) {
   return(combinations)
 }
 
-#testing====
-parameters <- list(a = c(1,2,3,4),
-                   b = c(5,6),
-                   c = c(7,8,9),
-                   d = c(10, 11, 12))
-test <- parametercombinations(parameters)
-
-#Used for project====
-#18.07
-parameters <- list(c = c(20, 40, 60),
-                   cov = c(9, 34, 60),
-                   periodicity = c(5, 3.5, 2),
-                   sensitvity = c(79.2, 100))
-scenarios <- parametercombinations(parameters)
-write.csv(scenarios, file = "allscenariocombinations.csv")
+# #testing====
+# parameters <- list(a = c(1,2,3,4),
+#                    b = c(5,6),
+#                    c = c(7,8,9),
+#                    d = c(10, 11, 12))
+# test <- parametercombinations(parameters)

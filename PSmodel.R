@@ -1,4 +1,5 @@
 library(deSolve)
+source("Parameter_combinations.R")
 
 PSmodel <- function (t, x,pars) {
   with(as.list(c(x,pars)),{
@@ -67,11 +68,11 @@ PSmodel <- function (t, x,pars) {
       Inc_inf_out_comm = Inc_inf_out_comm,
       case_notification_rate = case_notification_rate * 100000,
       cases_removed = cases_removed,
-      dur_active_TB = dur_active_TB,
-      dur_active_inf_TB = dur_active_inf_TB,
       Prev = TB_prev * 100000,
       Inf_prev = Inf_prev * 100000,
-      Mort = TB_Deaths * 100000
+      Mort = TB_Deaths * 100000,
+      dur_active_TB = dur_active_TB,
+      dur_active_inf_TB = dur_active_inf_TB
     )
   })
 }
@@ -98,27 +99,26 @@ pars_base <- c(b=22,
                Mui=0.3,
                Mun=0.21,
                CDR=0.7, 
-               CDR_survey=CDR_int(0.7,0.7,0.9),
+               CDR_survey=CDR_int(CDR = 0.7, cov = 0, sens = 0),
                tau=0.91,
-               k_base=0.79,
+               k_base = 0.79,
                k_int = 0.79,
                r=0.2, 
                c=0.22, 
                Ic = 0.002, 
                survey_interval=5)
 
-sol_base <-ode(y=yinit,times=seq(0,500, by=0.02),func=PSmodel,parms=pars_base)
+sol_base <-ode(y=yinit,times=seq(0,1000, by=0.02),func=PSmodel,parms=pars_base)
 
-#time step = 0.02 of a year; equilirbium is reached by about 100 years (=500 time steps)
+#time step = 0.02 of a year
 
 sol_base_df <- as.data.frame(sol_base)
 
 plot(sol_base_df$time, sol_base_df$Prev, type = "l")
 plot(sol_base_df$time, sol_base_df$cases_removed, type = "l")
 plot(sol_base_df$time, sol_base_df$dur_active_inf_TB, type = "l")
-
-
-
+plot(sol_base_df$time, sol_base_df$cum_I, type = "l")
+plot(sol_base_df$time, sol_base_df$I, type = "l")
 
 
 
