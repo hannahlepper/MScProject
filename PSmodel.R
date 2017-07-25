@@ -83,16 +83,10 @@ survey_times <- function(survey_interval) {
 }
 
 Init_inf <- 0.2 # Fraction of the pop initially infected
-yinit <- c(
-  U=1-Init_inf,
-  Ls=0.99*Init_inf,
-  Lf=0,
-  I=0.01*Init_inf,
-  N=0,
-  C=0)
+yinit <- c(U=1-Init_inf,Ls=0.99*Init_inf,Lf=0,I=0.01*Init_inf,N=0,C=0)
 
-pars_base <- c(b=22, #pa -> pts 
-               p=0.01, #rate of relapse
+pars_base <- c(b=22,  
+               p=0.01,
                a=0.11, 
                vf=0.67, 
                vs=0.0005, 
@@ -123,31 +117,6 @@ plot(sol_base_df$time, sol_base_df$Prev, type = "l")
 plot(sol_base_df$time, sol_base_df$cases_removed, type = "l")
 plot(sol_base_df$time, sol_base_df$dur_active_inf_TB, type = "l")
 
-
-CDR <- 0.7/50
-CDR_survey <- CDR_int(CDR,0.7/50,0.9/50)
-survey_interval <- 1
-del <- approxfun(x=survey_times(survey_interval),y=rep(c(CDR, CDR_survey, CDR),3),method="linear",rule=2)
-k <- approxfun(x=survey_times(survey_interval),y=rep(c(.79),9),method="linear",rule=2) 
-
-Mu <- 0.06/50
-Mui <- 0.3/50
-Mun <- 0.21/50
-tau <- 0.91
-theta <- 0.015/50
-nc <- 0.2/50
-
-t <- 1:2000
-
-I <- .1
-N <- .1
-c <- 0.22
-dur_I <- 1/(Mu + Mui + del(t)*k(t)*tau + nc)
-dur_N <- 1/(theta + Mu + Mun + del(t)*k(t)*tau + nc)
-dur_active_TB <- (I*dur_I + N*dur_N)/(I + N)
-dur_active_inf_TB <- (I*dur_I + c*N*dur_N)/(I + c*N)
-
-plot(1:2000, dur_active_TB, type = "l")
 
 
 
