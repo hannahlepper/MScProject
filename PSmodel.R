@@ -1,5 +1,4 @@
 library(deSolve)
-source("Parameter_combinations.R")
 
 PSmodel <- function (t, x,pars) {
   with(as.list(c(x,pars)),{
@@ -114,11 +113,11 @@ sol_base <-ode(y=yinit,times=seq(0,1000, by=0.02),func=PSmodel,parms=pars_base)
 
 sol_base_df <- as.data.frame(sol_base)
 
-plot(sol_base_df$time, sol_base_df$Prev, type = "l")
-plot(sol_base_df$time, sol_base_df$cases_removed, type = "l")
-plot(sol_base_df$time, sol_base_df$dur_active_inf_TB, type = "l")
-plot(sol_base_df$time, sol_base_df$cum_I, type = "l")
-plot(sol_base_df$time, sol_base_df$I, type = "l")
+# plot(sol_base_df$time, sol_base_df$Prev, type = "l")
+# plot(sol_base_df$time, sol_base_df$cases_removed, type = "l")
+# plot(sol_base_df$time, sol_base_df$dur_active_inf_TB, type = "l")
+# plot(sol_base_df$time, sol_base_df$cum_I, type = "l")
+# plot(sol_base_df$time, sol_base_df$I, type = "l")
 
 
 
