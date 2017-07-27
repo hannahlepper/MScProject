@@ -6,8 +6,7 @@ PSmodel <- function (t, x,pars) {
     pars <- pars/50
     
     del <- approxfun(x=survey_times(survey_interval),y=rep(c(CDR, CDR_survey, CDR),3),method="linear",rule=2)
-    k <- approxfun(x=survey_times(survey_interval),y=rep(c(k_base, k_int, k_base),3),method="linear",rule=2) 
-    
+
     births <- Mu*(U + Ls + Lf + I + N + C) + Mui*I + Mun*N   
     P <- U + Ls + Lf + I + N + C 
     
@@ -29,10 +28,10 @@ PSmodel <- function (t, x,pars) {
     dLs <- ((1-a)*(foi_basic + foi_comm)) - foi_exo_react - foi_exo_react_comm - (vs + Mu)*Ls   
     dLf <- (a * (foi_basic + foi_comm)) - (vf + Mu)*Lf 
     dI <- sg*(vs*Ls + vf*Lf + foi_exo_react + foi_exo_react_comm 
-                            + foi_reinf + foi_reinf_comm + p*C) + theta*N - (del(t)*k(t)*tau + Mu + Mui + nc)*I 
+                            + foi_reinf + foi_reinf_comm + p*C) + theta*N - (del(t)*k*tau + Mu + Mui + nc)*I 
     dN <- (1-sg)*(vs*Ls + vf*Lf + foi_exo_react + foi_exo_react_comm 
-                                + foi_reinf + foi_reinf_comm + p*C) - (theta + del(t)*k(t)*tau + Mu + Mun + nc)*N  
-    dC <- (nc + del(t)*k(t)*tau)*(I + N) - foi_reinf - foi_reinf_comm - (p + Mu)*C 
+                                + foi_reinf + foi_reinf_comm + p*C) - (theta + del(t)*k*tau + Mu + Mun + nc)*N  
+    dC <- (nc + del(t)*k*tau)*(I + N) - foi_reinf - foi_reinf_comm - (p + Mu)*C 
 
     # Outputs
     
@@ -44,13 +43,13 @@ PSmodel <- function (t, x,pars) {
     Inc_recent <- Inc_first + foi_exo_react + foi_exo_react_comm + Inc_reinf 
     Inc_inf_out_comm <- foi_comm + foi_exo_react_comm + foi_reinf_comm
     case_notification_rate <- del(t) * Inc #Is this right?
-    cases_removed <- del(t) * k(t) * tau * (I + N) #Is this right?
+    cases_removed <- del(t) * k * tau * (I + N) #Is this right?
     TB_prev <- I+N                 
     Inf_prev <- Ls + Lf + I + N + C        
     TB_Deaths <- Mui*I + Mun*N
     
-    dur_I <- 1/(Mu + Mui + del(t)*k(t)*tau + nc)
-    dur_N <- 1/(theta + Mu + Mun + del(t)*k(t)*tau + nc)
+    dur_I <- 1/(Mu + Mui + del(t)*k*tau + nc)
+    dur_N <- 1/(theta + Mu + Mun + del(t)*k*tau + nc)
     
     dur_active_TB <- (I*dur_I + N*dur_N)/(I + N)
     dur_active_inf_TB <- (I*dur_I + c*N*dur_N)/(I + c*N)
@@ -58,7 +57,7 @@ PSmodel <- function (t, x,pars) {
     list(
       c(dU,dLs,dLf,dI,dN,dC),
       Total = P,
-      Inc = Inc * 100000 * 50,
+      Inc = Inc * 100000,
       Inc_first = Inc_first,
       Inc_react = Inc_react,
       Inc_reinf = Inc_reinf,
@@ -79,7 +78,7 @@ PSmodel <- function (t, x,pars) {
 CDR_int <- function(CDR, cov, sens) {CDR + ((1-CDR)*cov*sens)}
 
 survey_times <- function(survey_interval) {
-  cumsum(c(200, 1, 1, rep(c(survey_interval, 1, 1), 2)))
+  cumsum(c(500, 1, 1, rep(c(survey_interval, 1, 1), 2)))
 }
 
 Init_inf <- 0.2 # Fraction of the pop initially infected
@@ -100,8 +99,7 @@ pars_base <- c(b=22,
                CDR=0.7, 
                CDR_survey=CDR_int(CDR = 0.7, cov = 0, sens = 0),
                tau=0.91,
-               k_base = 0.79,
-               k_int = 0.79,
+               k = 0.79,
                r=0.2, 
                c=0.22, 
                Ic = 0.002, 
@@ -113,7 +111,7 @@ sol_base <-ode(y=yinit,times=seq(0,1000, by=0.02),func=PSmodel,parms=pars_base)
 
 sol_base_df <- as.data.frame(sol_base)
 
-# plot(sol_base_df$time, sol_base_df$Prev, type = "l")
+#plot(sol_base_df$time, sol_base_df$Prev, type = "l")
 # plot(sol_base_df$time, sol_base_df$cases_removed, type = "l")
 # plot(sol_base_df$time, sol_base_df$dur_active_inf_TB, type = "l")
 # plot(sol_base_df$time, sol_base_df$cum_I, type = "l")
