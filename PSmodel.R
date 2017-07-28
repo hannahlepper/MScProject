@@ -1,7 +1,7 @@
 library(deSolve)
 
 PSmodel <- function (t, x,pars) {
-  pars <- pars[1:20]
+
   with(as.list(c(x,pars)),{
     
     pars <- pars/50
