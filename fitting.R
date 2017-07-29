@@ -2,6 +2,7 @@
 
 #====Needs====
 library(deSolve)
+library(rootSolve)
 library(rlist)
 library(plyr)
 source("PSmodel.R")
@@ -36,28 +37,22 @@ equilibrium_test <- function(data) {
   return(flag)
 }
 
-#Try to get as close to equilibrium as possible
-final <- function (data, cat) {
-  as.numeric(tail(data[cat], 1))
-}
-newyinit <- function(data) {
-  c(U=final(data, "U"), 
-    Ls=final(data, "Ls") + 0.005, 
-    Lf=final(data, "Lf") - 0.005, 
-    I=final(data, "I"), 
-    N=final(data, "N"), 
-    C=final(data, "C"))
-}
-yinit <-newyinit(sol_base_df)
+
 
 #====fitting functions====
 #1. make series of output incidences with input parameters
+# modelrun <- function(parameters, init, changeparam) {
+#   sol <- ode(y=init,times=seq(0,1, by=0.02),func=PSmodel,parms=parameters)
+#   sol_df <- as.data.frame(sol)
+#   if (equilibrium_test(sol_df)){
+#     as.data.frame(cbind(parameters[changeparam], Inc = tail(sol_df$Inc, 1)))
+#   } else {print("Eqlm not reached")}
+# }
+
 modelrun <- function(parameters, init, changeparam) {
-  sol <- ode(y=init,times=seq(0,1, by=0.02),func=PSmodel,parms=parameters)
+  sol <- runsteady(y=init,times=c(0,Inf),func=PSmodel,parms=parameters)
   sol_df <- as.data.frame(sol)
-  if (equilibrium_test(sol_df)){
-    as.data.frame(cbind(parameters[changeparam], Inc = tail(sol_df$Inc, 1)))
-  } else {print("Eqlm not reached")}
+  as.data.frame(cbind(parameters[changeparam], Inc = tail(sol_df$Inc, 1)))
 }
 
 modelrun(pars_base, yinit, "b")
@@ -157,5 +152,31 @@ start <- Sys.time()
 lowrlowk <- selectpars(other_pars_lessblessMu)
 timetaken <- Sys.time() - start
 
-adply(tofit, 1, selectpars) #runs across all 12
+fittedparams <- adply(tofit, 1, selectpars) #runs across all 12
+
+
+
+pars <- c(other_pars_lessblessMu, 
+          Mu = as.numeric(lowrlowk["Mu"]), 
+          b = as.numeric(lowrlowk["beta"]))
+
+other_pars_lessblessMu <- c(p=0.01, a=0.11, vf=0.67, vs=0.0005, 
+                               sg=0.45, x=0.65, nc=0.2, theta=0.015,  
+                               Mui=0.3, Mun=0.21, CDR=0.7, 
+                               CDR_survey=CDR_int(CDR = 0.7, cov = 0, sens = 0),
+                               tau=0.91, k = .4, r=0.1,c=0.22, Ic = 0.002, 
+                               survey_interval=5)
+
+#Try to get as close to equilibrium as possible - may or may not use
+
+fastrun <- function(y, pars) {
+  initrun<-runsteady(y=y,times=c(0,Inf), func=PSmodel, parms=pars)
+  yinit<-initrun$y
+  sol_base<-ode(y=yinit,times=seq(0,500, by=0.02),func=PSmodel,parms=pars)
+  sol_base_df <- as.data.frame(sol_base)
+  print(equilibrium_test(sol_base_df))
+  return(sol_base_df)
+}
+
+test <- fastrun(yinit, pars)
 

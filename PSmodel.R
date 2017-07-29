@@ -106,7 +106,7 @@ pars_base <- c(b=22,
                Ic = 0.002, 
                survey_interval=5)
 
-sol_base <-ode(y=yinit,times=seq(0,1000, by=0.02),func=PSmodel,parms=pars_base)
+sol_base <-ode(y=yinit,times=seq(0,2000, by=0.02),func=PSmodel,parms=pars_base)
 
 #time step = 0.02 of a year
 
