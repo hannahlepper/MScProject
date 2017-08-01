@@ -5,13 +5,11 @@ library(deSolve)
 library(rootSolve)
 library(plyr)
 library(readr)
-setwd("C://Users/hanna/Documents/GitHub/MSc project/")
-source("PSmodel.R")
-source("Parameter_combinations.R")
-source("matchclosestMALDIquant.R")
-source("fitting.R")
+source("C://Users/hanna/Documents/GitHub/MSc project/PSmodel.R")
+source("C://Users/hanna/Documents/GitHub/MSc project/Parameter_combinations.R")
+source("C://Users/hanna/Documents/GitHub/MSc project/fitting.R")
 
-read.csv("fitting.csv", header = TRUE)
+fittedparams <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/fittedparms.csv", header = TRUE)
 
 fittedparams <- rename(fittedparams, c("beta" = "b"))
 fittedparams <- fittedparams[,-22]
@@ -34,16 +32,10 @@ fastrun <- function(pars) {
   return(sol_base_df)
 }
 
-initrun<-runsteady(y=y,times=c(0,Inf), func=PSmodel, parms=convertdftonumeric(fittedparams[1,]))
-
-start <- Sys.time()
-test <- fastrun(fittedparams[1,])
-Sys.time() - start
+#test <- fastrun(fittedparams[1,])
 #about 8 seconds
 
-start <- Sys.time()
-baselinedata <- adply(fittedparams, 1, fastrun)
-Sys.time() - start
+#baselinedata <- adply(fittedparams, 1, fastrun)
 #1.7 minutes
-write.csv(baselinedata, "baselinedata.csv")
+#write.csv(baselinedata, "baselinedata.csv")
 
