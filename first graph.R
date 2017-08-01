@@ -1,0 +1,16 @@
+function(df){
+  plot(df$time, df$Inc, type = "l")
+  tit
+}
+
+efficientsurveylowcomm <- experimentdatalist[[
+  which(names(experimentdatalist)=="r0.1k1cov0.9survey_interval1")[1]]]
+efficientsurveyhighcomm <- experimentdatalist[[
+  which(names(experimentdatalist)=="r0.7k1cov0.9survey_interval1")[1]]]
+
+plot(efficientsurveylowcomm$time, efficientsurveylowcomm$Inc, type = "l", 
+     xlim=c(499,510), ylim = c(110, 114), col = "red")
+lines(efficientsurveyhighcomm$time, efficientsurveyhighcomm$Inc, col = "blue")
+abline(v=survey_times(1)[2])
+abline(v=survey_times(1)[5])
+abline(v=survey_times(1)[8])
