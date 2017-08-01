@@ -37,7 +37,7 @@ fastrun_exp <- function(pars) {
   pars <- rename(pars, c("cov" = "CDR_survey"))
   initrun<-runsteady(y=y,times=c(0,Inf), func=PSmodel, parms=pars)
   yinit<-initrun$y
-  sol_base<-ode(y=yinit,times=seq(0,1, by=0.02),func=PSmodel,parms=pars)
+  sol_base<-ode(y=yinit,times=seq(0,600, by=0.02),func=PSmodel,parms=pars)
   sol_base_df <- as.data.frame(sol_base)
   return(sol_base_df)
 }
@@ -48,9 +48,13 @@ convertdftonumeric_exp <- function(df){
   setNames(num, pars)
 }
 
-#system.time(fastrun_exp(fullparset[1,])) #18 seconds 
+#system.time(fastrun_exp(fullparset[1,])) # 19 seconds 
 test <- fastrun_exp(fullparset[1,])
 plot(test$time, test$I, type = "l")
 
+start <- Sys.time()
 experimentdata <- adply(fullparset, 1, fastrun_exp)
-plot(experimentdata$time, experimentdata$survey_interval)
+Sys.time() - start #46 minutes
+
+write.csv(experimentdata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdata.csv")
+
