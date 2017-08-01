@@ -79,7 +79,7 @@ PSmodel <- function (t, x, pars) {
 CDR_int <- function(CDR, cov, sens) {CDR + ((1-CDR)*cov*sens)}
 
 survey_times <- function(survey_interval) {
-  cumsum(c(500, 1, 1, rep(c(survey_interval, 1, 1), 2)))
+  cumsum(c(500, 0.2, 0.2, rep(c(survey_interval, .2, .2), 2)))
 }
 
 #Init_inf <- 0.2 # Fraction of the pop initially infected
