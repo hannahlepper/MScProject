@@ -9,6 +9,7 @@ setwd("C://Users/hanna/Documents/GitHub/MSc project/")
 source("PSmodel.R")
 source("Parameter_combinations.R")
 source("matchclosestMALDIquant.R")
+setwd("C://Users/hanna/Documents/")
 
 #====Community mixing and NTP case treatment scenarios:====
 pars <- list(p=0.01, a=0.115, vf=0.67, 
@@ -123,17 +124,17 @@ selectpars <- function(pars) {
   return(df)
 }
 
-start <- Sys.time()
-lowrlowk <- selectpars(other_pars_lessblessMu)
-Sys.time() - start
+# start <- Sys.time()
+# lowrlowk <- selectpars(other_pars_lessblessMu)
+# Sys.time() - start
 #25 seconds
 
-start <- Sys.time()
-fittedparams <- adply(tofit, 1, selectpars) #runs across all 12
-Sys.time() - start
-#4.3 minutes
-#2 mins on Mike's
-write.csv(fittedparams, "fittedparms.csv")
+# start <- Sys.time()
+# fittedparams <- adply(tofit, 1, selectpars) #runs across all 12
+# Sys.time() - start
+# #4.3 minutes
+# #2 mins on Mike's
+# write.csv(fittedparams, "fittedparms.csv")
 
 
 
