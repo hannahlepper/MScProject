@@ -11,6 +11,6 @@ efficientsurveyhighcomm <- experimentdatalist[[
 plot(efficientsurveylowcomm$time, efficientsurveylowcomm$Inc, type = "l", 
      xlim=c(499,510), ylim = c(110, 114), col = "red")
 lines(efficientsurveyhighcomm$time, efficientsurveyhighcomm$Inc, col = "blue")
-abline(v=survey_times(1)[2])
-abline(v=survey_times(1)[5])
-abline(v=survey_times(1)[8])
+abline(v=survey_times(1)[1])
+abline(v=survey_times(1)[4])
+abline(v=survey_times(1)[7])
