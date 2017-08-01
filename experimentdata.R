@@ -1,5 +1,8 @@
 #Run experiments
 
+##Needs re-runnning with new cov.!!!##
+
+
 #Needs====
 library(plyr)
 library(deSolve)
@@ -11,7 +14,7 @@ source("C://Users/hanna/Documents/GitHub/MSc project/baselinerun.R")
 #prepareparset====
 intandbasepars <- parametercombinations(list(r=c(.10,.40,.70),
                                              k=c(.40,.60,.80,1.00),
-                                             cov=c(.9,.34, .60, .90),
+                                             cov=c(.09,.34, .60, .90),
                                              survey_interval=c(1,3,5)))
 intandbasepars[,3] <- CDR_int(.77, intandbasepars[,3], .978)
 fullparset <- data.frame(rep(NA, 144))
