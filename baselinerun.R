@@ -9,11 +9,7 @@ source("C://Users/hanna/Documents/GitHub/MSc project/PSmodel.R")
 source("C://Users/hanna/Documents/GitHub/MSc project/Parameter_combinations.R")
 source("C://Users/hanna/Documents/GitHub/MSc project/fitting.R")
 
-fittedparams <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/fittedparms.csv", header = TRUE)
-
-fittedparams <- rename(fittedparams, c("beta" = "b"))
-fittedparams <- fittedparams[,-22]
-
+#Functions====
 #Try to get as close to equilibrium as possible - may or may not use
 convertdftonumeric <- function(df){
   pars <- c("p", "a", "vf", "vs", "sg", "x", "nc", "theta", 
@@ -31,11 +27,24 @@ fastrun <- function(pars) {
   print(equilibrium_test(sol_base_df))
   return(sol_base_df)
 }
+#get fitting data
+#function that I need -returns time taken to do function and returns function output:
+outputplustime <- function(func, ...){
+  start <- Sys.time()
+  output <- func(...)
+  print(Sys.time() - start)
+  return(output)
+}
 
-#test <- fastrun(fittedparams[1,])
-#about 8 seconds
+#get fitted param data====
+#get fitting data
+fittedparams <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/fittedparms.csv", header = TRUE)
+fittedparams <- rename(fittedparams, c("beta" = "b"))
+fittedparams <- fittedparams[,-22]
 
-#baselinedata <- adply(fittedparams, 1, fastrun)
+#generate data====
+
+#baselinedata <- ouputplustime(adply, fittedparams, 1, fastrun)
 #1.7 minutes
-#write.csv(baselinedata, "baselinedata.csv")
+#write.csv(baselinedata, ""C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/baselinedata.csv")
 

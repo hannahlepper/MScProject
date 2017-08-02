@@ -16,7 +16,6 @@ intandbasepars <- parametercombinations(list(r=c(.10,.40,.70),
                                              k=c(.40,.60,.80,1.00),
                                              cov=c(.09,.34, .60, .90),
                                              survey_interval=c(1,3,5)))
-intandbasepars[,3] <- CDR_int(.77, intandbasepars[,3], .978)
 fullparset <- data.frame(rep(NA, 144))
 
 pars_nonexperiment <- c("p", "a", "vf", "vs", "sg", "x", "nc", "theta", 
@@ -29,10 +28,8 @@ for (i in 1:length(pars_nonexperiment)) {
 fullparset <- cbind(fullparset, rep(0.978, 144), intandbasepars)
 
 fullparset <- setNames(fullparset, c(pars_nonexperiment, "sens", names(intandbasepars)))
-
-#run====
-#test 
-
+ 
+#functions====
 fastrun_exp <- function(pars) {
   y <- c(U=1-0.2,Ls=0.99*0.2,Lf=0,I=0.01*0.2,N=0,C=0)
   pars <- convertdftonumeric_exp(pars)
@@ -51,13 +48,13 @@ convertdftonumeric_exp <- function(df){
   setNames(num, pars)
 }
 
+#run====
 #system.time(fastrun_exp(fullparset[1,])) # 19 seconds 
-test <- fastrun_exp(fullparset[1,])
-plot(test$time, test$I, type = "l")
+#test <- fastrun_exp(fullparset[1,])
 
-start <- Sys.time()
-experimentdata <- adply(fullparset, 1, fastrun_exp)
-Sys.time() - start #46 minutes
 
-write.csv(experimentdata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdata.csv")
+#experimentdata <- outputplustime(adply,fullparset, 1, fastrun_exp)
+#46 minutes
+
+#write.csv(experimentdata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdata.csv")
 
