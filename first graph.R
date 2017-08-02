@@ -33,3 +33,5 @@ abline(v=survey_times(1)[1])
 abline(v=survey_times(1)[4])
 abline(v=survey_times(1)[7])
 
+
+plot(efficientsurveylowcomm$time, efficientsurveylowcomm$dur_active_inf_TB, xlim=c(499, 510))
