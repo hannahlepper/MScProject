@@ -13,10 +13,9 @@ getexpinputs <-function(i_b){
 #function - make subsets
 getasubset <- function(params, nums){
   subsetting <- function(l){
-    if (all(l[[1]][params]==nums)){return(l)}
+    if (all(l[[1]][params]==nums)){return(l[[2]])}
   }
-  out <- llply(dslist, subsetting)
-  out <- list.clean(out, is.null)
+  out <- ldply(dslist, subsetting)
   return(out)
 }
 
