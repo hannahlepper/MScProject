@@ -130,7 +130,7 @@ selectpars <- function(pars) {
 #25 seconds
 
 # start <- Sys.time()
-# fittedparams <- adply(tofit, 1, selectpars) #runs across all 12
+#fittedparams <- adply(tofit, 1, selectpars) #runs across all 12
 # Sys.time() - start
 # #4.3 minutes
 # #2 mins on Mike's
