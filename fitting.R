@@ -43,10 +43,7 @@ equilibrium_inc <- function(data) {
 #tests if at equilibrium
 equilibrium_test <- function(data) {
   eqlm <- min(data[which(data[,"Inc"] == as.numeric(tail(data,1)["Inc"])),"time"])
-  if(eqlm == as.numeric(tail(data,1)["time"]) | eqlm == as.numeric(tail(data,1)["Inc"])+1) 
-    {flag <- FALSE}
-  else {flag <- TRUE}
-  return(flag)
+  !(eqlm == as.numeric(tail(data,1)["time"]) | eqlm == as.numeric(tail(data,1)["Inc"])+1) 
 }
 
 #====fitting functions====
