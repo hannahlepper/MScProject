@@ -4,7 +4,7 @@ PSmodel <- function (t, x, pars) {
 
   with(as.list(c(x,pars)),{
     
-    CDR_survey <- CDR_int(CDR, cov, k)
+    CDR_survey <- CDR_int(CDR, cov, k, sens)
     del <- approxfun(x=survey_times(survey_interval),y=rep(c(CDR, CDR_survey, CDR),3),method="linear",rule=2)
 
     births <- Mu*(U + Ls + Lf + I + N + C) + Mui*I + Mun*N   
@@ -78,7 +78,7 @@ PSmodel <- function (t, x, pars) {
   })
 }
 
-CDR_int <- function(CDR, cov, k) {CDR + ((1-CDR)*cov*k)} #Need to check this is OK
+CDR_int <- function(CDR, cov, k, sens) {CDR + ((1-CDR)* cov * k * sens)} #Need to check this is OK
 
 survey_times <- function(survey_interval) {
   cumsum(c(500, 0.2, 0.2, rep(c(survey_interval, .2, .2), 2)))
@@ -88,26 +88,26 @@ Init_inf <- 0.2 # Fraction of the pop initially infected
 yinit <- c(U=1-Init_inf,Ls=0.99*Init_inf,Lf=0,I=0.01*Init_inf,N=0,C=0)
 
 #pars====
-pars_base <- c(b=22,
-              p=0.01,
-              a=0.11,
-              vf=0.67,
-              vs=0.0005,
-              sg=0.45,
-              x=0.65,
-              nc=0.2,
-              theta=0.015,
-              Mu=0.06,
-              Mui=0.3,
-              Mun=0.21,
-              CDR=0.7,
-              cov = 0, 
-              k = 0,
-              tau=0.91,
-              r=0.2,
-              c=0.22,
-              Ic = 0.002,
-              survey_interval=5)
+# pars_base <- c(b=22,
+#               p=0.01,
+#               a=0.11,
+#               vf=0.67,
+#               vs=0.0005,
+#               sg=0.45,
+#               x=0.65,
+#               nc=0.2,
+#               theta=0.015,
+#               Mu=0.06,
+#               Mui=0.3,
+#               Mun=0.21,
+#               CDR=0.7,
+#               cov = 0, 
+#               k = 0,
+#               tau=0.91,
+#               r=0.2,
+#               c=0.22,
+#               Ic = 0.002,
+#               survey_interval=5)
 #Solve====
 # sol_base <-ode(y=yinit,times=seq(0,100, by=0.02),func=PSmodel,parms=pars_base)
 # #time step = 0.02 of a year
