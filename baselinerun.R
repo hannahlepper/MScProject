@@ -10,7 +10,6 @@ source("C://Users/hanna/Documents/GitHub/MSc project/Parameter_combinations.R")
 source("C://Users/hanna/Documents/GitHub/MSc project/fitting.R")
 
 #Functions====
-#Try to get as close to equilibrium as possible - may or may not use
 convertdftonumeric <- function(df){
   pars <- names(df)
   num <- as.numeric(df)
@@ -25,7 +24,6 @@ fastrun <- function(pars) {
   print(equilibrium_test(sol_base_df))
   return(sol_base_df)
 }
-#get fitting data
 #function that I need -returns time taken to do function and returns function output:
 outputplustime <- function(func, ...){
   start <- Sys.time()
@@ -33,15 +31,23 @@ outputplustime <- function(func, ...){
   print(Sys.time() - start)
   return(output)
 }
+baseparfixer <- function(fitpars) {
+  pars <- data.frame(b=10,Mu=0.006,Mui=0.3,Mun=0.21,a=0.115,theta=0.015,p=0.01,
+               c=0.22,x=0.65,vs=0.0005,vf=0.67,nc=0.2,sg=0.45,CDR=0.77,sens=0,
+               cov = 0,k = 0,tau=0.91,r=.4,Ic = 0.001,survey_interval=1)
+  newfitpars <- fitpars[which(names(fitpars)%in%names(pars))]
+  newpars <- pars[which(!names(pars)%in%names(fitpars))]
+  setNames(
+    as.numeric(c(newfitpars, newpars)), 
+    c(names(newfitpars), names(newpars)))
+}
 
 #get fitted param data====
 #get fitting data
-fittedparams <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/fittedparms.csv", header = TRUE)
-fittedparams <- rename(fittedparams, c("beta" = "b"))
-fittedparams <- fittedparams[,-22]
+fittedparams <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/fittedparams.csv", header = TRUE)
+fittedparams <- adply(fittedparams, 1, baseparfixer, .expand = F, .id = NULL)
 
 #generate data====
 baselinedata <- outputplustime(adply, fittedparams, 1, fastrun)
 #1.7 minutes
-write.csv(baselinedata, ""C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/baselinedata.csv")
-
+write.csv(baselinedata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/baselinedata.csv")
