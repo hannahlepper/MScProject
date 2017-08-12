@@ -1,8 +1,5 @@
 #Run experiments
 
-##Needs re-runnning with new cov.!!!##
-
-
 #Needs====
 library(plyr)
 library(deSolve)
@@ -10,11 +7,10 @@ library(rootSolve)
 library(readr)
 source("C://Users/hanna/Documents/GitHub/MSc project/baselinerun.R")
 
-
 #prepareparset====
 exp.parfixer <- function(changepars, fitpars) {
-  pars <- data.frame(b=10,Mu=0.006,Mui=0.3,Mun=0.21,a=0.115,theta=0.015,p=0.01,
-                     c=0.22,x=0.65,vs=0.0005,vf=0.67,nc=0.2,sg=0.45,CDR=0.77,sens=0.978,
+  pars <- data.frame(b=10,Mu=0.006,Mui=0.22,Mun=0.108,a=0.115,theta=0.015,p=0.01,
+                     c=0.22,x=0.65,vs=0.0005,vf=0.67,nc=0.09,sg=0.45,CDR=0.77,sens=0.978,
                      cov = 0,k = 0,tau=0.91,r=.4,Ic = 0.001,survey_interval=0)
   newparset <- as.data.frame(c(changepars, 
                                fitpars[which(fittedparams$r==changepars$r),
@@ -31,23 +27,30 @@ intandbasepars <- parametercombinations(list(r=c(.10,.40,.70),
 
 fullparset <- adply(intandbasepars, 1, function(x) exp.parfixer(x, fittedparams),
                     .expand=F, .id=NULL)
+#prepare initials
+inits <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/shortbaselinedata.csv", 
+                   sep = ",",header = T, stringsAsFactors = F) %>%
+  .[,c("U","Ls","Lf","I","N","C", "r")]
 
 #functions====
-fastrun_exp <- function(pars) {
-  y <- c(U=1-0.2,Ls=0.99*0.2,Lf=0,I=0.01*0.2,N=0,C=0)
-  initrun<-runsteady(y=y,times=c(0,Inf), func=PSmodel, parms=pars)
-  yinit<-initrun$y
+keepnames <- function(df){
+  setNames(as.numeric(df), names(df))
+}
+
+fastrun_exp <- function(pars, inits) {
+  yinit <- keepnames(inits[which(inits$r==pars[1,"r"]),])[head(names(inits),6)]
   sol_base<-ode(y=yinit,times=seq(0,600, by=0.02),func=PSmodel,parms=pars)
   sol_base_df <- as.data.frame(sol_base)
   return(sol_base_df)
 }
+
 #run====
 #system.time(fastrun_exp(fullparset[1,])) # 19 seconds 
-test <- fastrun_exp(fullparset[1,])
+#test <- outputplustime(fastrun_exp, fullparset[2,], inits)
+#plot(test$time, test$Inc, type = "l", ylim = c(124.4,125), xlim = c(499, 520))
 
-
-experimentdata <- outputplustime(adply, fullparset, 1, fastrun_exp, .expand=F, .id=NULL)
-#46 minutes
-
-write.csv(experimentdata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav2.csv")
-
+# experimentdata <- outputplustime(adply, fullparset, 1, 
+#                                  function(x) fastrun_exp(x, inits),
+#                                  .expand=F, .id=NULL)
+#1.1 hours
+#write.csv(experimentdata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav3.csv")
