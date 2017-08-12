@@ -39,10 +39,9 @@ PSmodel <- function (t, x, pars) {
     Inc <- vs*Ls + vf*Lf + foi_exo_react + foi_exo_react_comm + foi_reinf + foi_reinf_comm + p*C 
     Inc_first <- vf*Lf
     Inc_react <- vs*Ls + foi_exo_react_comm + foi_exo_react
-    Inc_reinf <- foi_reinf + foi_reinf_comm
     Inc_relap <- p*C
-    Inc_recent <- Inc_first + foi_exo_react + foi_exo_react_comm + Inc_reinf 
-    Inc_inf_out_comm <- foi_comm + foi_exo_react_comm + foi_reinf_comm
+    Inc_recent <- Inc_first + foi_exo_react + foi_exo_react_comm + 
+      foi_reinf + foi_reinf_comm
     case_notifications <- del(t) * (I + N) #Is this right?
     cases_removed <- del(t) * tau * (I + N) #Is this right?
     treatment_cov <- case_notifications / Inc
@@ -59,13 +58,17 @@ PSmodel <- function (t, x, pars) {
     list(
       c(dU,dLs,dLf,dI,dN,dC),
       Total = P,
+      foi_basic = foi_basic,
+      foi_reinf_comm = foi_reinf_comm,
+      foi_reinf = foi_reinf,
+      foi_exo_react_comm = foi_exo_react_comm,
+      foi_exo_react = foi_exo_react,
+      foi_comm = foi_comm,
       Inc = Inc * 100000,
       Inc_first = Inc_first * 100000,
       Inc_react = Inc_react * 100000,
-      Inc_reinf = Inc_reinf *100000,
       Inc_relap = Inc_relap *100000,
       Inc_recent = Inc_recent * 100000,
-      Inc_inf_out_comm = Inc_inf_out_comm * 100000,
       case_notifications = case_notifications * 100000,
       treatment_cov = treatment_cov,
       cases_removed = cases_removed * 100000,
