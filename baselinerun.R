@@ -26,7 +26,7 @@ fastrun <- function(pars) {
 }
 #function that I need -returns time taken to do function and returns function output:
 outputplustime <- function(func, ...){
-  start <- Sys.time()
+  start <- print(Sys.time())
   output <- func(...)
   print(Sys.time() - start)
   return(output)
@@ -48,6 +48,6 @@ fittedparams <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs 
 fittedparams <- adply(fittedparams, 1, baseparfixer, .expand = F, .id = NULL)
 
 #generate data====
-baselinedata <- outputplustime(adply, fittedparams, 1, fastrun)
+#baselinedata <- outputplustime(adply, fittedparams, 1, fastrun)
 #1.7 minutes
-write.csv(baselinedata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/baselinedata.csv")
+#write.csv(baselinedata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/baselinedata.csv")
