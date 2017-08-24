@@ -24,6 +24,8 @@ fastrun <- function(pars) {
   print(equilibrium_test(sol_base_df))
   return(sol_base_df)
 }
+
+
 #function that I need -returns time taken to do function and returns function output:
 outputplustime <- function(func, ...){
   start <- print(Sys.time())
@@ -51,3 +53,8 @@ fittedparams <- adply(fittedparams, 1, baseparfixer, .expand = F, .id = NULL)
 #baselinedata <- outputplustime(adply, fittedparams, 1, fastrun)
 #1.7 minutes
 #write.csv(baselinedata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/baselinedata.csv")
+
+#moar data?!How many time points to steady state====
+# tosteadydata <- outputplustime(adply, fittedparams, 1, tosteadyrun)
+# write.csv(tosteadydata,
+#           "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/tosteadydata.csv")
