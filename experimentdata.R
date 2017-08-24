@@ -5,6 +5,7 @@ library(plyr)
 library(deSolve)
 library(rootSolve)
 library(readr)
+library(tidyr)
 source("C://Users/hanna/Documents/GitHub/MSc project/baselinerun.R")
 
 #prepareparset====
@@ -45,12 +46,13 @@ fastrun_exp <- function(pars, inits) {
 }
 
 #run====
-#system.time(fastrun_exp(fullparset[1,])) # 19 seconds 
-#test <- outputplustime(fastrun_exp, fullparset[2,], inits)
-#plot(test$time, test$Inc, type = "l", ylim = c(124.4,125), xlim = c(499, 520))
-
-# experimentdata <- outputplustime(adply, fullparset, 1, 
-#                                  function(x) fastrun_exp(x, inits),
-#                                  .expand=F, .id=NULL)
-#1.1 hours
-#write.csv(experimentdata, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav3.csv")
+# test <- outputplustime(fastrun_exp, fullparset[2,], inits)
+# plot(test$time, test$cases_removed, type = "l", xlim = c(499, 505))
+# 
+# #1 hour
+# experimentdata <- outputplustime(adply, fullparset, 1,
+#                                   function(x) fastrun_exp(x, inits),
+#                                   .id=NULL)
+# #15 mins
+# outputplustime(write.csv,experimentdata,
+#           "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav5.csv")
