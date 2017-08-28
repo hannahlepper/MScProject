@@ -40,19 +40,19 @@ keepnames <- function(df){
 
 fastrun_exp <- function(pars, inits) {
   yinit <- keepnames(inits[which(inits$r==pars[1,"r"]),])[head(names(inits),6)]
-  sol_base<-ode(y=yinit,times=seq(0,600, by=0.02),func=PSmodel,parms=pars)
+  sol_base<-ode(y=yinit,times=seq(0,550, by=0.02),func=PSmodel,parms=pars)
   sol_base_df <- as.data.frame(sol_base)
   return(sol_base_df)
 }
 
 #run====
-# test <- outputplustime(fastrun_exp, fullparset[2,], inits)
-# plot(test$time, test$cases_removed, type = "l", xlim = c(499, 505))
+test <- outputplustime(fastrun_exp, fullparset[2,], inits)
+plot(test$time, test$cases_removed, type = "l")
 # 
 # #1 hour
-# experimentdata <- outputplustime(adply, fullparset, 1,
-#                                   function(x) fastrun_exp(x, inits),
-#                                   .id=NULL)
-# #15 mins
-# outputplustime(write.csv,experimentdata,
-#           "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav5.csv")
+experimentdata <- outputplustime(adply, fullparset, 1,
+                                  function(x) fastrun_exp(x, inits),
+                                  .id=NULL)
+#15 mins
+outputplustime(write.csv,experimentdata,
+          "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav6.csv")
