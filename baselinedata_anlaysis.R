@@ -159,3 +159,34 @@ cat.plot <- ggplot(cat.df, aes(r, val * 100, linetype = as.factor(type))) +
   geom_line() +
   facet_grid(type~., scale = "free_y") 
   
+
+#FOIs====
+foi <- bdatashort[,c("foi_basic","foi_comm","r")] %>%
+  gather(.,output, val, foi_basic,foi_comm) 
+foi[,"output"] <- factor(foi[,"output"], 
+                         labels = c("Force of primary\ninfection acquired\nwithin the community\n",
+                                    "Force of primary\ninfection acquired\noutside the community\n"))
+
+foiplot <- ggplot(foi, aes(r, val, linetype = output)) +
+  geom_point(size = 2) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Level of between community transmission",
+       y = "Force of infection",
+       linetype = "") +
+  theme(panel.grid=element_blank(),
+        legend.background = element_blank()) +
+  scale_x_continuous(breaks = c(0.1,0.4,0.7))
+
+#Time to steady
+
+tosteadydata <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/tosteadydata.csv")
+
+tosteadyplot <- ggplot(tosteadydata, aes(r, time)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Level of between community transmission",
+       y = "Time in years to steady state") +
+  theme_bw() +
+  scale_x_continuous(breaks =c(0.1,0.4,0.7)) +
+  scale_y_continuous(breaks = seq(500,1200,100))
