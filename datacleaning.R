@@ -6,35 +6,46 @@ library(rlist)
 library(tidyr)
 source("C://Users/hanna/Documents/GitHub/MSc project/experimentdata.R")
 
-#useful function====
+#useful functions====
 
 repeatrows <- function(df, n){
   df[rep(seq_len(nrow(df)),n),]
 }
 
-#Get baseline data====
-#  largebaselinedataset <- outputplustime(read.csv,
-#                                         "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/baselinedata.csv")
-# # #18 seconds
-# bds <- cbind(largebaselinedataset, 
-#              r = rep(c(.1, .4,.7),
-#                      each = dim(largebaselinedataset)[1]/3)) %>%
-#   split(., f=.$r) %>%
-#   ldply(., function(x) tail(x, 1))
+getexpnum <- function(pars){
+  which(apply(intandbasepars, 1, function(x) all(x==pars)))
+}
 
-#write.csv(bdatashort, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/shortbaselinedata.csv")
+#Get baseline data====
+largebaselinedataset <- outputplustime(read.csv,
+                                        "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/baselinedata.csv")
+# # #18 seconds
+bds <- cbind(largebaselinedataset,
+             r = rep(c(.1, .4,.7),
+                     each = dim(largebaselinedataset)[1]/3)) %>%
+  split(., f=.$r) %>%
+  ldply(., function(x) tail(x, 1))
+
+write.csv(bds, "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/shortbaselinedata.csv")
 
 #Get experimental data====
 largeexperimentaldataset <- outputplustime(read.csv,
-     "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav6.csv")
+     "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav7.csv")
 # #takes 9 mins
 
 
 #clean exp data====
 #get rid of inputs, add on experiment numbers
 
+keep <- c("r", "k", "cov", "survey_interval",
+          "time", 
+          "U", "I", "N", "Ls", "Lf", "C",
+          "foi_basic", "foi_reinf_comm", "foi_reinf", "foi_exo_react_comm", "foi_exo_react", "foi_comm",
+          "Inc", "Inc_first", "Inc_react", "Inc_relap", "Inc_recent",
+          "case_notifications", "treatment_cov", "cases_removed",
+          "Prev", "Inf_prev", "Mort", "dur_active_TB", "dur_active_inf_TB")
 
-ds<-cbind(largeexperimentaldataset[,-c(1,6:22)],
+ds<-cbind(largeexperimentaldataset[,which(names(largeexperimentaldataset)%in%keep)],
           expnum = rep(c(1:dim(intandbasepars)[1]),
                        each = dim(largeexperimentaldataset)[1]/dim(intandbasepars)[1]))
 
@@ -57,10 +68,6 @@ interestingexps <- data.frame(
     cov = rep(c(0.09,0.6,0.9),each = 3, length.out=36)
   ))
 interestingexps <- interestingexps[,c(1,2,4,3)]
-
-getexpnum <- function(pars){
-  which(apply(intandbasepars, 1, function(x) all(x==pars)))
-}
 
 to.use <- apply(interestingexps,1,getexpnum)
 
