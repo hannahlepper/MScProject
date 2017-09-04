@@ -46,13 +46,21 @@ fastrun_exp <- function(pars, inits) {
 }
 
 #run====
-test <- outputplustime(fastrun_exp, fullparset[2,], inits)
-plot(test$time, test$cases_removed, type = "l")
+# test <- outputplustime(fastrun_exp, fullparset[2,], inits)
+# plot(test$time, test$cases_removed, type = "l")
+# # 
+# # #1 hour
+# experimentdata <- outputplustime(adply, fullparset, 1,
+#                                   function(x) fastrun_exp(x, inits),
+#                                   .id=NULL)
+# #15 mins
+# outputplustime(write.csv,experimentdata,
+#           "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav7.csv")
+
+#Full time data - need for first graph, to show what happens before year 499
+# fulltimedata <- adply(fullparset[which(fullparset$survey_interval == 3 &
+#                    fullparset$k == 0.8 &
+#                    fullparset$cov == 0.6),], 1, function (x) fastrun_exp(x, inits), .id=NULL)
 # 
-# #1 hour
-experimentdata <- outputplustime(adply, fullparset, 1,
-                                  function(x) fastrun_exp(x, inits),
-                                  .id=NULL)
-#15 mins
-outputplustime(write.csv,experimentdata,
-          "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatav6.csv")
+# write.csv(fulltimedata, 
+#           "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/fulltimeaveragesurveydata.csv")
