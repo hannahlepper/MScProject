@@ -10,12 +10,12 @@ PSmodel <- function (t, x, pars) {
     births <- Mu*(U + Ls + Lf + I + N + C) + Mui*I + Mun*N   
     P <- U + Ls + Lf + I + N + C 
     
-    #Equations####
-    #Betas
+    # Equations####
+    # Betas
     bw <- (1-r) * b
     bc <- r * b
     
-    #FOIs
+    # FOIs
     foi_basic <- bw * U * (I + (c*N))
     foi_comm <- bc * U *Ic
     foi_exo_react <- bw * a * x * (I + (c*N)) * Ls
@@ -42,8 +42,8 @@ PSmodel <- function (t, x, pars) {
     Inc_relap <- p*C
     Inc_recent <- Inc_first + foi_exo_react + foi_exo_react_comm + 
       foi_reinf + foi_reinf_comm
-    case_notifications <- del(t) * (I + N) #Is this right?
-    cases_removed <- del(t) * tau * (I + N) #Is this right?
+    case_notifications <- del(t) * (I + N)
+    cases_removed <- del(t) * tau * (I + N)
     treatment_cov <- case_notifications / Inc
     TB_prev <- I+N                 
     Inf_prev <- Ls + Lf + I + N + C        
@@ -81,51 +81,33 @@ PSmodel <- function (t, x, pars) {
   })
 }
 
-CDR_int <- function(CDR, cov, k, sens) {CDR + cov * k * sens} 
+# Detection rate functions====
+CDR_int <- function(CDR, cov, k, sens) {CDR + 50 * (cov * k * sens)} 
 
 survey_times <- function(survey_interval) {
-  cumsum(c(499.98, 0.02, 0.02, rep(c(survey_interval-0.04, .02, .02), 2)))
+  cumsum(c(499.98, 0.02, 0.02, 
+  rep(c(survey_interval-0.04, 0.02,0.02), 2)))
 }
 
+# Initials====
 Init_inf <- 0.2 # Fraction of the pop initially infected
 yinit <- c(U=1-Init_inf,Ls=0.99*Init_inf,Lf=0,I=0.01*Init_inf,N=0,C=0)
 
-#pars====
-pars_base <- c(b=22,
-              p=0.01,
-              a=0.11,
-              vf=0.67,
-              vs=0.0005,
-              sg=0.45,
-              x=0.65,
-              nc=0.2,
-              theta=0.015,
-              Mu=0.06,
-              Mui=0.3,
-              Mun=0.21,
-              CDR=0.7,
-              cov = 0,
-              k = 0,
-              tau=0.91,
-              r=0.2,
-              c=0.22,
-              Ic = 0.002,
-              survey_interval=5)
-#Solve====
-#sol_base <-ode(y=yinit,times=seq(0,600, by=0.02),func=PSmodel,parms=fullparset[1,])
+# Parameters====
+pars_base <- c(b=22, p=0.01, a=0.11, vf=0.67, vs=0.0005,
+              sg=0.45, x=0.65, nc=0.2,theta=0.015,
+              Mu=0.06, Mui=0.3, Mun=0.21, CDR=0.7,
+              cov = 0, k = 0, tau=0.91, r=0.2,
+              c=0.22, Ic = 0.002, survey_interval=5)
+
+# Solve====
+sol_base <-ode(y=yinit,times=seq(0,600, by=0.02),func=PSmodel,
+               parms=fullparset[80,])
 #time step = 0.02 of a year
-# sol_base_df <- as.data.frame(sol_base)
-# plot(sol_base_df$time, sol_base_df$cases_removed, type = "l", xlim=c(499,501),ylim = c(80,90))
-# lines(sol_base_df$time, sol_base_df$case_notifications)
-# plot(sol_base_df$time, sol_base_df$treatment_cov, type = "l")
-# plot(sol_base_df$time, sol_base_df$cum_I, type = "l")
-# plot(sol_base_df$time, sol_base_df$I, type = "l")
 
-
-
-
-
-
+sol_base_df <- as.data.frame(sol_base)
+plot(sol_base_df$time, sol_base_df$cases_removed, type = "l")
+plot(sol_base_df$time, sol_base_df$Prev, type = "l", c(499, 510), c(50,150))
 
 
 
