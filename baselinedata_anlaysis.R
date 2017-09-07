@@ -36,10 +36,10 @@ dummy <- data.frame(output = rep(c("Prev", "Inc", "Mort", "treatment_cov"),each 
                     val = c(rep(c(200, 170, 50, 100),each = 4), 
                             rep(c(100, 50, 5, 50),each = 4)))
 
-tvmplotlabels <- c("Low (r=0.1)",
-                   "Medium (r=0.4)",
-                   "High (r=0.7)",
-                   "Target value")
+tvmplotlabels <- c("Low \n(r=0.1)",
+                   "Medium \n(r=0.4)",
+                   "High \n(r=0.7)",
+                   "Target \nvalue")
 
 output_labels <- list("Inc" = "Incidence per 100,000",
                       "Mort" = "TB related mortality per 100,000",
@@ -175,10 +175,13 @@ foiplot <- ggplot(foi, aes(r, val, linetype = output)) +
        y = "Force of infection",
        linetype = "") +
   theme(panel.grid=element_blank(),
-        legend.background = element_blank()) +
+        legend.background = element_blank(),
+        legend.direction = "horizontal",
+        legend.position = "bottom") +
   scale_x_continuous(breaks = c(0.1,0.4,0.7))
 
-#Time to steady
+
+#Time to steady====
 
 tosteadydata <- read.csv("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/tosteadydata.csv")
 
@@ -190,3 +193,19 @@ tosteadyplot <- ggplot(tosteadydata, aes(r, time)) +
   theme_bw() +
   scale_x_continuous(breaks =c(0.1,0.4,0.7)) +
   scale_y_continuous(breaks = seq(500,1200,100))
+
+#Graph saving====
+
+setwd("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Graphs/")
+
+svg("targetvmodel3.svg", height = 5)
+targetvmodel
+dev.off()
+
+svg("foiplot2.svg", height = 5)
+foiplot
+dev.off()
+
+svg("tosteadyplot2.svg", height = 5)
+tosteadyplot
+dev.off()

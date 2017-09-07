@@ -2,6 +2,7 @@ library(tidyr)
 library(ggplot2)
 library(plyr)
 library(readr)
+library(Cairo)
 
 ds.short <- read.csv(
   "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/shorttimeexpdata.csv")
@@ -10,6 +11,8 @@ ds.int <- read.csv(
 ds.so <- read.csv(
   "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/expdatasurveytimesonly.csv"
 )
+
+source("C://Users/hanna/Documents/GitHub/MSc project/datacleaning.R")
 
 #Calculate differnces and percent changes between surveys====
 #Differences
@@ -92,7 +95,9 @@ summarytransplot <- ggplot(t.averagefoi, aes(time, val*100000, col = as.factor(r
        col = "Level of between\ncommunity transmission") +
   facet_wrap(~outcome) +
   scale_colour_grey(start=0.6,end=0)+
-  theme(strip.background = element_rect(fill = "white"))
+  theme(strip.background = element_rect(fill = "white"),
+        legend.direction = "horizontal",
+        legend.position = "bottom")
   
 #Effect on persistence of effect
 
@@ -103,7 +108,9 @@ av.changes.plot <- ggplot(av.changes, aes(r, diff.val, linetype = diff)) +
   geom_line() +
   geom_point() +
   theme_bw() +
-  theme(strip.background =element_rect(fill = "white")) +
+  theme(strip.background =element_rect(fill = "white"),
+        legend.direction = "horizontal",
+        legend.position = "bottom") +
   labs(x = "Level of between community transmission",
        y = "Difference between survey one and two, \nper 100,00",
        linetype = "") +
@@ -133,7 +140,9 @@ covincprecplot <-ggplot() +
   geom_point(data = coverage.so, aes(time, val, col = as.factor(cov)), shape = 8) +
   facet_wrap(~outcome) +
   theme_bw() +
-  theme(strip.background=element_rect(fill = "white")) +
+  theme(strip.background=element_rect(fill = "white"),
+        legend.direction = "horizontal",
+        legend.position = "bottom") +
   labs(x = "Time in years", y = "", col = "Survey coverage") +
   scale_x_continuous(limits = c(499, 512), breaks = seq(500,512, 2)) +
   scale_colour_grey(start=0.6, end = 0)
@@ -145,7 +154,9 @@ cov.changes.plot <- ggplot(cov.changes, aes(cov, diff.val, linetype = diff)) +
   geom_line() + 
   geom_point() +
   theme_bw() +
-  theme(strip.background =element_rect(fill = "white")) +
+  theme(strip.background =element_rect(fill = "white"),
+        legend.direction = "horizontal",
+        legend.position = "bottom") +
   labs(x = "Survey coverage",
        y = "Difference between survey one and two, \nper 100,00",
        linetype = "")
@@ -175,7 +186,9 @@ kincprevplot <-ggplot() +
   geom_point(data = ksens.so, aes(time, val, col = as.factor(k)), shape = 8) +
   facet_wrap(~outcome) +
   theme_bw() +
-  theme(strip.background=element_rect(fill = "white")) +
+  theme(strip.background=element_rect(fill = "white"),
+        legend.direction = "horizontal",
+        legend.position = "bottom") +
   labs(x = "Time in years", y = "", col = "Linkage to treatment") +
   scale_x_continuous(limits = c(499, 512), breaks = seq(500,512, 2)) +
   scale_colour_grey(start=0.6, end = 0)
@@ -187,7 +200,9 @@ k.changes.plot <- ggplot(k.changes, aes(k, diff.val, linetype = diff)) +
   geom_line() +
   geom_point() +
   theme_bw() +
-  theme(strip.background =element_rect(fill = "white")) +
+  theme(strip.background =element_rect(fill = "white"),
+        legend.direction = "horizontal",
+        legend.position = "bottom") +
   labs(x = "Linkage to treatment",
        y = "Difference between survey one and two, \nper 100,00",
        linetype = "")
@@ -217,7 +232,9 @@ sisincprevplot <-ggplot() +
   geom_point(data = sisens.so, aes(time, val, col = as.factor(survey_interval)), shape = 8) +
   facet_wrap(~outcome, nrow = 2, ncol =1) +
   theme_bw() +
-  theme(strip.background=element_rect(fill = "white")) +
+  theme(strip.background=element_rect(fill = "white"),
+        legend.direction = "horizontal",
+        legend.position = "bottom") +
   labs(x = "Time in years", y = "", col = "Survey interval \nin years") +
   scale_x_continuous(limits = c(499, 530), breaks = seq(500,530, 5))
 
@@ -228,7 +245,9 @@ si.changes.plot <- ggplot(si.changes, aes(survey_interval, diff.val, linetype = 
   geom_line() +
   geom_point() +
   theme_bw() +
-  theme(strip.background =element_rect(fill = "white")) +
+  theme(strip.background =element_rect(fill = "white"),
+        legend.direction = "horizontal",
+        legend.position = "bottom") +
   labs(x = "Survey interval",
        y = "Difference between survey one and two, \nper 100,00",
        linetype = "")
@@ -328,7 +347,7 @@ minincs <- ddply(testeddata, .(expnum), function(x) {
 write.csv(minincs,
           "C://Users/hanna/Dropbox/Academic/LSHTM/Project/Inputs and outputs/initialincdecline.csv")
 
-#Distribution of differences; boxplot
+#Distribution of differences; boxplot====
 
 box.diff.dist <- ggplot(diff.df, aes(1, diff.val)) +
   geom_boxplot() +
@@ -338,3 +357,51 @@ box.diff.dist <- ggplot(diff.df, aes(1, diff.val)) +
   labs(x ="", y = "Difference between survey 1 and 2, \nper 100,00") +
   scale_x_continuous(breaks = c(0,5)) +
   scale_y_continuous(breaks = seq(0,-40,-2))
+
+#Save graphs====
+
+#graphs
+setwd("C://Users/hanna/Dropbox/Academic/LSHTM/Project/Graphs/")
+svg("summaryplot.svg",height = 5)
+summaryplot
+dev.off()
+
+svg("summarytransmission.svg",height = 5)
+summarytransplot
+dev.off()
+
+svg("summarydifferences.svg",height = 5)
+av.changes.plot
+dev.off()
+
+svg("coverageincprev.svg",height = 5)
+covincprecplot
+dev.off()
+
+svg("coveragedifferences.svg",height = 5)
+cov.changes.plot
+dev.off()
+
+svg("linkageincprev.svg",height = 5)
+kincprevplot
+dev.off()
+
+svg("linkagedifferences.svg",height = 5)
+k.changes.plot
+dev.off()
+
+svg("surveyintervalincprev.svg",height = 5)
+sisincprevplot
+dev.off()
+
+svg("surveyintervaldifferences.svg",height = 5)
+si.changes.plot
+dev.off()
+
+svg("extremeincprev.svg",height = 5)
+extremeincprevplot
+dev.off()
+
+svg("box.diff.dist.svg")
+box.diff.dist
+dev.off()
