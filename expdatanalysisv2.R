@@ -14,6 +14,11 @@ ds.so <- read.csv(
 
 source("C://Users/hanna/Documents/GitHub/MSc project/datacleaning.R")
 
+#Samp sizes function ====
+sampsize <- function(diff, sd){
+  (0.84 + 1.96)^2 * ((2 * sd)^2)/(diff^2)
+}
+
 #Calculate differnces and percent changes between surveys====
 #Differences
 diff.df <- ds.so[,c("r","k","cov","survey_interval","Inc", "Prev", "expnum")] %>%
@@ -84,12 +89,12 @@ t.averagefoi <- gather(average.full[which(average.full$time >=499 &
                        outcome, val, -time, -r) %>%
   mutate(., 
          outcome=factor(.[,"outcome"], 
-                         labels = c("Incidence of primary infection, \nper 100,00",
+                         labels = c("Incidence of primary infection, \nacquired within the community, \nper 100,00",
                                     "Incidence of primary infection \nacquired outside the community, \nper 100,00")))
   
 summarytransplot <- ggplot(t.averagefoi, aes(time, val*100000, col = as.factor(r))) +
   geom_line() +
-  scale_x_continuous(limits = c(499,512), breaks = seq(499,512,1)) +
+  scale_x_continuous(limits = c(499,512), breaks = seq(499,512,2)) +
   theme_bw() +
   labs(x= "Time in years", y = "", 
        col = "Level of between\ncommunity transmission") +
@@ -97,7 +102,7 @@ summarytransplot <- ggplot(t.averagefoi, aes(time, val*100000, col = as.factor(r
   scale_colour_grey(start=0.6,end=0)+
   theme(strip.background = element_rect(fill = "white"),
         legend.direction = "horizontal",
-        legend.position = "bottom")
+        legend.position = "bottom") 
   
 #Effect on persistence of effect
 
@@ -366,7 +371,7 @@ svg("summaryplot.svg",height = 5)
 summaryplot
 dev.off()
 
-svg("summarytransmission.svg",height = 5)
+svg("summarytransmission3.svg",height = 5)
 summarytransplot
 dev.off()
 
