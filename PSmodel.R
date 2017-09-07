@@ -90,24 +90,24 @@ survey_times <- function(survey_interval) {
 }
 
 # Initials====
-Init_inf <- 0.2 # Fraction of the pop initially infected
-yinit <- c(U=1-Init_inf,Ls=0.99*Init_inf,Lf=0,I=0.01*Init_inf,N=0,C=0)
-
-# Parameters====
-pars_base <- c(b=22, p=0.01, a=0.11, vf=0.67, vs=0.0005,
-              sg=0.45, x=0.65, nc=0.2,theta=0.015,
-              Mu=0.06, Mui=0.3, Mun=0.21, CDR=0.7,
-              cov = 0, k = 0, tau=0.91, r=0.2,
-              c=0.22, Ic = 0.002, survey_interval=5)
-
-# Solve====
-sol_base <-ode(y=yinit,times=seq(0,600, by=0.02),func=PSmodel,
-               parms=fullparset[80,])
-#time step = 0.02 of a year
-
-sol_base_df <- as.data.frame(sol_base)
-plot(sol_base_df$time, sol_base_df$cases_removed, type = "l")
-plot(sol_base_df$time, sol_base_df$Prev, type = "l", c(499, 510), c(50,150))
+# Init_inf <- 0.2 # Fraction of the pop initially infected
+# yinit <- c(U=1-Init_inf,Ls=0.99*Init_inf,Lf=0,I=0.01*Init_inf,N=0,C=0)
+# 
+# # Parameters====
+# pars_base <- c(b=22, p=0.01, a=0.11, vf=0.67, vs=0.0005,
+#               sg=0.45, x=0.65, nc=0.2,theta=0.015,
+#               Mu=0.06, Mui=0.3, Mun=0.21, CDR=0.7,
+#               cov = 0, k = 0, tau=0.91, r=0.2,
+#               c=0.22, Ic = 0.002, survey_interval=5)
+# 
+# # Solve====
+# sol_base <-ode(y=yinit,times=seq(0,600, by=0.02),func=PSmodel,
+#                parms=fullparset[80,])
+# #time step = 0.02 of a year
+# 
+# sol_base_df <- as.data.frame(sol_base)
+# plot(sol_base_df$time, sol_base_df$cases_removed, type = "l")
+# plot(sol_base_df$time, sol_base_df$Prev, type = "l", c(499, 510), c(50,150))
 
 
 
